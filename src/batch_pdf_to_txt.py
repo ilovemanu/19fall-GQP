@@ -35,4 +35,4 @@ def batch_pdf_to_txt(input_folder, output_folder):
             
      
 # batch convert
-batch_pdf_to_txt('NONs', 'NONs_txt')
+#batch_pdf_to_txt('NONs', 'NONs_txt')
