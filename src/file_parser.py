@@ -4,13 +4,13 @@ import os
 import re
 
 
-def read_first_line(file):
+def parse_each_file(file):
     """Gets the name of the file and the citations specified in the file
 
     Returns
     -------
     str
-        Returns a comma-delimited format of the file name and list of citations
+        Returns a comma-delimited format of the file name, list of citations, and their descriptions
     """
     listOfCitations = ""
     citationsList = [];
@@ -18,6 +18,7 @@ def read_first_line(file):
     with open(file, 'rt', encoding="utf8") as fd:
         name = os.path.basename(fd.name).strip(".txt")
         matches = re.findall(r'310 CMR 40.\d\d\d\d', fd.read());
+
         for m in matches:
             citationsList.append(m.replace(",", "."))
         uniqueCitations = set(citationsList)
@@ -31,9 +32,8 @@ def read_first_line(file):
 
     return name,listOfCitations,""
 
-def merge_per_folder(folder_path, output_filename):
-    """Merges first lines of text files in one folder, and
-    writes combined lines into new output file
+def produce_csv(folder_path, output_filename):
+    """Produces a csv of file name, citations and descriptions of a folder with text files
 
     Parameters
     ----------
@@ -49,12 +49,12 @@ def merge_per_folder(folder_path, output_filename):
 
     # write to file
     csvex = csv.writer(open(folder_path + output_filename, "wt"))
-    headers = ['file name', 'description', 'citation']
+    headers = ['file name', 'citation', 'description']
     csvex.writerow(headers)
 
     for f in txt_files:
-        s = read_first_line(f)
+        s = parse_each_file(f)
         print(s)
         csvex.writerow(s)
 
-merge_per_folder(r"C:\Users\Achu\PycharmProjects\NONs_txt_split\NONs_txt_split\DESCRIPTION OF ACTIVITY OR OMISSION CONSTITUTING NONCOMPLIANCE", r"\output")
+produce_csv(r"C:\Users\Achu\PycharmProjects\NONs_txt_split\NONs_txt_split\DESCRIPTION OF ACTIVITY OR OMISSION CONSTITUTING NONCOMPLIANCE", r"\output")
