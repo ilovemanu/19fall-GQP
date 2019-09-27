@@ -14,14 +14,23 @@ def parse_each_file(file):
     """
     listOfCitations = ""
     citationsList = [];
+    circumstanceStr = ""
+    flag = False
 
     with open(file, 'rt', encoding="utf8") as fd:
+        lineContents = fd.readlines()
+        contents = "".join(lineContents)
+        # Name Processing
         name = os.path.basename(fd.name).strip(".txt")
-        matches = re.findall(r'310 CMR 40.\d\d\d\d', fd.read());
 
-        for m in matches:
+
+        # Citation Processing
+        citMatches = re.findall(r'310 CMR 40.\d\d\d\d', contents);
+        for m in citMatches:
             citationsList.append(m.replace(",", "."))
+
         uniqueCitations = set(citationsList)
+
         first = True
         for uc in uniqueCitations:
             if first:
@@ -30,7 +39,22 @@ def parse_each_file(file):
             else:
                 listOfCitations = listOfCitations + " / " + uc
 
-    return name,listOfCitations,""
+        # Circumstance Processing
+
+        #cirMatches = re.findall(r'DESCRIPTION OF ACT', contents);
+        #print(len(cirMatches))
+        #cirEndMatches = re.findall(r'DESCRIPTION OF REQ', contents);
+        #print(len(cirEndMatches))
+
+        for line in lineContents:
+            if(re.match(r'DES', line)):
+                flag = False
+            if (re.match(r'DESCRIPTION OF ACT', line)):
+                flag = True
+            if(flag):
+                circumstanceStr += line
+        circumstanceStr.rstrip();
+    return name,listOfCitations,circumstanceStr
 
 def produce_csv(folder_path, output_filename):
     """Produces a csv of file name, citations and descriptions of a folder with text files
