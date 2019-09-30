@@ -43,61 +43,43 @@ def test_noncompliance(input_path):
 # print(test_noncompliance(input_path))
 
 
-# (398, 293, 105)  # found two more no_info files
-
-# def test_requirement(input_path):
-#     """
-#     Find info about the 'Description of requirements not complied with' section
-#     :param input_path:
-#     :return:
-#     """
-#
-#     q2 = r'DESCRIPTION OF( THE)? RE(QUIREMENT(S)?)?(QUIREMENT\(S\))? NOT(.)? COMPLIED WITH'
-#     # q3 = r'ACTION(\(S\))?(S)?(s)? TO BE TAKEN'
-#
-#     counter = 0
-#     _, _, filenames = next(os.walk(input_path))
-#     for file in filenames:
-#         input_f = os.path.join(input_path, file)
-#         with open(input_f, 'r', encoding='utf-8', errors='ignore') as f:
-#             in_file_counter = 0
-#             for line in f:
-#                 pattern = re.search(q2, line)
-#                 # pattern = re.search(q3, line)
-#                 if pattern:
-#                     in_file_counter += 1
-#
-#         if in_file_counter == 1: counter += in_file_counter
-#         elif in_file_counter == 0:
-#             print(file)
-#             # os.rename(input_f, os.path.join(input_path, 'temp2', file))  # move to another folder
-#         else:
-#             print('more', file)
-#             # os.rename(input_f, os.path.join(input_path, 'temp2', file))  # move to another folder
-#
-#     return counter
-
-
-# input_path = '../NONs_txt_split/DESCRIPTION OF NONCOMPLIANCE_2'
-# print(test_requirement(input_path))
-
-
-def write_csv(csvname, data):  # data is a tuple
+def write_csv(csvname, header, data):  # data is a tuple
     """
-    Append data (tuple) to csv.
-    :param csvname: csv file name
-    :param data: a tuple representing a row, separated by comma.
+    Write data to csv.
+    :param csvname:
+    :param header: a list of field names for header.
+    :param data: tuple separated by coma.
     :return:
     """
     with open(csvname, 'a+') as csvfile:
         # creating a csv writer object
         csvwriter = csv.writer(csvfile, delimiter=',')
+        # write the header if file is empty
+        if csvfile.tell() == 0:
+            csvwriter.writerow(i for i in header)
         # writing the data rows
         csvwriter.writerows([data])
 
 
-# TO-DO: parse citations.
-def parser(input_path, csvname):
+def get_citation(q_list, text, req):
+    """
+    Get citations.
+    :param q_list: regex list
+    :param text: the description of noncompliance section
+    :param req: the description of requirements section, or the whole file
+    :return: a list of citations
+    """
+    citations = []
+    # look under 'description of requirements'
+    for q in q_list[:-1]:
+        citations += re.findall(q, req)
+    if len(citations) == 0:
+        # look under 'description of noncompliance'
+        citations += re.findall(q_list[-1], text)
+    return list(set(citations))
+
+
+def parser(input_path, csvname, header):
     """
     Parse the files with single noncompliance.
     Two scenarios:
@@ -105,21 +87,35 @@ def parser(input_path, csvname):
     2) 'description of noncompliance' comes before 'actions to be taken'
     :param input_path: input folder path
     :param csvname: csv filename.
+    :param header: csv filename header.
     :return: file counter.
-             single (filename w/o extension, single noncompliance section) from each file.
+             single (filename w/o extension, list of citations, single noncompliance section) from each file.
     """
 
     q1 = r'DESCRIPTION(S)? OF NON(COMPLIANCE)?'
     q2 = r'DESCRIPTION OF( THE)? RE(QUIREMENT(S)?)?(QUIREMENT\(S\))? NOT(.)? COMPLIED WITH'
     q3 = r'ACTION(S)? TO BE TAKEN'
+    q_citation_1 = r'(40[.]\d{4}):'
+    q_citation_2 = r'(40[.]\d{4})\(\d\):'
+    q_citation_3 = r'(40[.]\d{4})\(\d\) [A-Z]'
+    q_citation_4 = r'40\.\d{4}'
+    q_list = [q_citation_1, q_citation_2, q_citation_3, q_citation_4]
 
-    counter = 0
+    counter = 0  # track file #
     _, _, filenames = next(os.walk(input_path))
     for file in filenames:
         input_f = os.path.join(input_path, file)
         with open(input_f, 'r', encoding='utf-8', errors='ignore') as f:
             data = f.readlines()
+            citations = []
+
             for line_num, line in enumerate(data):
+
+                # parse citations * duplicates included
+                citations += re.findall(q_citation_1, line)
+                citations += re.findall(q_citation_2, line)
+                citations += re.findall(q_citation_3, line)
+
                 if re.search(q1, line):
                     n1 = line_num
                 elif re.search(q2, line):
@@ -130,31 +126,32 @@ def parser(input_path, csvname):
             if n2:
                 if n1 < n2:  # noncompliance followed by requirements
                     text = ''.join(data[n1:n2])
-                    # print(file)
-                    # print(text)
                     counter += 1
-                    write_csv(csvname, (file.split('.')[0], text))
                 else:  # noncompliance followed by action
                     text = ''.join(data[n1:n3])
-                    # print(file)
-                    # print(text)
                     counter += 1
-                    write_csv(csvname, (file.split('.')[0], text))
             else:  # noncompliance followed by action while requirement missing
                 text = ''.join(data[n1:n3])
-                # print(file)
-                # print(text)
                 counter += 1
-                write_csv(csvname, (file.split('.')[0], text))
+
+            citations = get_citation(q_list, text, ''.join(data))
+
+            # find out filenames with empty citation list
+            # add manually
+            if len(citations) == 0: print(file)
+
+            # write out data for each file
+            # write_csv(csvname, header, (file.split('.')[0], citations, text))
 
     return counter
 
 
-# input_path = '../NONs_txt_split/DESCRIPTION OF NONCOMPLIANCE_2'
-# print(parser(input_path, 'out_alex.csv'))
+# input_path = '../../NONs_txt_split/DESCRIPTION OF NONCOMPLIANCE_2'
+# header = ['filename', 'citation list', 'paragraph']
+# print(parser(input_path, 'single_293.csv', header))
 # 293
 
-def parser_duo(input_path, csvname):
+def parser_duo(input_path, csvname, header):
     """
     Parse the files with multiple noncompliance.
     Three scenarios:
@@ -163,29 +160,37 @@ def parser_duo(input_path, csvname):
         'actions to be taken' at the end.
     3) 'description of noncompliance' count = 'description of requirements' + 'actions to be taken', and
         'description of noncompliance' comes before 'description of requirements', and their counts match
-    :param input_path: input folder path
-    :param csvname: csv filename
+    :param input_path: input folder path.
+    :param csvname: csv filename.
+    :param header: csv filename header.
     :return: file counter.
-             multiple (filename w/o extension, single noncompliance section) from each file.
+             multiple (filename w/o extension, list of citations, single noncompliance section) from each file.
     """
-
     q1 = r'DESCRIPTION(S)? OF NON(COMPLIANCE)?'
     q2 = r'DESCRIPTION OF( THE)? RE(QUIREMENT(S)?)?(QUIREMENT\(S\))?(C YUIREMENTS)? NOT(.)? COMPLIED WITH'
     q3 = r'ACTION(S)?(\(S\))? TO BE TAKEN'
+    q_citation_1 = r'(40[.]\d{4}):'
+    q_citation_2 = r'(40[.]\d{4})\(\d\):'
+    q_citation_3 = r'(40[.]\d{4})\(\d\) [A-Z]'
+    q_citation_4 = r'40\.\d{4}'
+    q_list = [q_citation_1, q_citation_2, q_citation_3, q_citation_4]
 
     counter = 0  # track all file
     counter1 = 0  # track files with matching noncompliance and requirement occurrences
     counter2 = 0  # track files with non-matching noncompliance and requirement occurrences
     counter3 = 0  # track all noncompliance occurrences
+
     _, _, filenames = next(os.walk(input_path))
     for file in filenames:
         if file.split('.')[1] == 'txt':
             input_f = os.path.join(input_path, file)
-            n1 = []
-            n2 = []
-            n3 = []
+
             with open(input_f, 'r', encoding='utf-8', errors='ignore') as f:
                 data = f.readlines()
+                n1 = []
+                n2 = []
+                n3 = []
+
                 for line_num, line in enumerate(data):
                     if re.search(q1, line):
                         n1.append(line_num)
@@ -194,37 +199,57 @@ def parser_duo(input_path, csvname):
                     elif re.search(q3, line):
                         n3.append(line_num)
 
-            counter += 1
-            if len(n1) == len(n2):
-                counter1 += 1
-                if n1[0] < n2[0]:  # noncompliance comes first
-                    for i in range(len(n1)):
-                        counter3 += 1
-                        text = data[n1[i]:n2[i]]
-                        write_csv(csvname, (file.split('.')[0], text))
+                counter += 1
+                if len(n1) == len(n2):
+                    counter1 += 1
+                    if n1[0] < n2[0]:  # noncompliance comes first
+                        if len(n3) == 1:
+                            n1.append(n3[0])
+                            for i in range(len(n1)-1):
+                                counter3 += 1
+                                text = ''.join(data[n1[i]:n2[i]])
+                                req = ''.join(data[n2[i]:n1[i+1]])
+                                citations = get_citation(q_list, text, req)
 
-                else:  # requirements comes first, action at the end
-                    # print(file, n3)
-                    n2.pop(0)
+                                if len(citations) == 0: print(file)
+                                # write_csv(csvname, header, (file.split('.')[0], citations, text))
+
+                        else:  # two 'ACTION' sections
+                            for i in range(len(n1)):
+                                counter3 += 1
+                                text = ''.join(data[n1[i]:n2[i]])
+                                citations = list(set(re.findall(q_citation_4, text)))
+                                if len(citations) == 0: print(file)
+                                # write_csv(csvname, header, (file.split('.')[0], citations, text))
+
+                    else:  # requirements comes first, action at the end
+                        n2.append(n3[0])
+                        for i in range(len(n2)-1):
+                            counter3 += 1
+                            text = ''.join(data[n1[i]:n2[i+1]])
+                            req = ''.join(data[n2[i]:n1[i]])
+                            citations = get_citation(q_list, text, req)
+
+                            if len(citations) == 0: print(file)
+                            # write_csv(csvname, header, (file.split('.')[0], citations, text))
+                else:  # len(n2) < len(n1) and 'noncompliance' comes first
+                    counter2 += 1
                     n2.append(n3[0])
                     for i in range(len(n1)):
                         counter3 += 1
-                        text = data[n1[i]:n2[i]]
-                        write_csv(csvname, (file.split('.')[0], text))
-            else:
-                counter2 += 1
-                n2.append(n3[0])
-                for i in range(len(n1)):
-                    counter3 += 1
-                    text = data[n1[i]:n2[i]]
-                    write_csv(csvname, (file.split('.')[0], text))
+                        text = ''.join(data[n1[i]:n2[i]])
+                        citations = list(set(re.findall(q_citation_4, text)))
+                        if len(citations) == 0: print(file)
+                        # write_csv(csvname, header, (file.split('.')[0], citations, text))
 
     return counter, counter1, counter2, counter3
 
 
-# input_path = '../NONs_txt_split/DESCRIPTION OF NONCOMPLIANCE_2/temp'
-# print(parser_duo(input_path, 'out_alex_duo.csv'))
-# (105, 102, 3, 239)
+# input_path = '../../NONs_txt_split/DESCRIPTION OF NONCOMPLIANCE_2/temp'
+# header = ['filename', 'citation list', 'paragraph']
+# print(parser_duo(input_path, 'duo_105.csv', header))
+# (104, 101, 3, 235)
+
 
 def count_row(file_path):
     """
