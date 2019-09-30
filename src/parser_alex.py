@@ -4,6 +4,7 @@
 import os
 import re
 import csv
+import pandas as pd
 
 
 def test_noncompliance(input_path):
@@ -265,3 +266,32 @@ def count_row(file_path):
 
 # file_path = 'out_alex_duo.csv'
 # print((count_row(file_path)))
+
+
+def others_parser(csv_path):
+    """
+    Update data csv with citations from copy & pasted paragraphs.
+    :param csv_path:
+    :return: updated csv
+    """
+    q_citation_1 = r'40.\d{4}'
+    q_citation_2 = r'40,\d{4}'
+
+    df = pd.read_csv(csv_path)
+    # print(df.columns)  # ['filename', 'citations', 'paragraph']
+
+    citations = []
+    null_idx = df[df.citations.isnull()].index.tolist()
+    tmp = df[df.citations.isnull()].paragraph.tolist()
+
+    for i, t in enumerate(tmp):
+        c = []
+        c += re.findall(q_citation_1, t)
+        c += re.findall(q_citation_2, t)
+        citations.append(list(set(c)))
+
+    df.citations.iloc[null_idx] = citations
+    df.to_csv('../../others_4.csv', index=False)
+
+
+# others_parser('../../others_4 copy.csv')
