@@ -1,13 +1,19 @@
 # Created by alex at 10/4/19
 
-
 import pandas as pd
 import re
 import nltk
 from nltk.corpus import stopwords
+import csv
 
 
 def clean_text(input_file_path, output_file_path):
+    """
+    Clean description of noncompliance.
+    :param input_file_path:
+    :param output_file_path:
+    :return: the output csv contains filename, citations, cleaned description.
+    """
 
     raw = pd.read_csv(input_file_path, encoding='utf-8')
 
@@ -32,7 +38,7 @@ def clean_text(input_file_path, output_file_path):
         temp = re.sub(r'enf(\w+)?(.)? doc(\w+)?(.)? no. \d{8}', '', temp)
         temp = re.sub(r'page \d', '', temp)
         temp = re.sub(r'notice of noncompliance( summary)?', '', temp)
-        # remove numbers and punctuations
+        # remove numbers and punctuations?
         temp = re.sub(r'[^a-z ]', '', temp)
         # remove multiple spaces
         temp = re.sub(r'\s+', ' ', temp)
@@ -51,7 +57,7 @@ def clean_text(input_file_path, output_file_path):
 # input_file_path = '../../parsed/single_293.csv'
 # output_file_path = 'test.csv'
 # clean_text(input_file_path, output_file_path)
-# print(pd.read_csv('test.csv').columns)
+# print(pd.read_csv('test.csv'))
 
 # input_file_path = '../../parsed/duo_105.csv'
 # output_file_path = '../../parsed/duo_105_clean.csv'
@@ -90,17 +96,21 @@ def nlp(file_path):
 # nlp(input_file_path)
 
 
+def utf_8_encoding(input_path):
+    """
+    Rewrite a csv to have utf-8 encoding.
+    :param input_path:
+    :return: csv with utf-8 encoding.
+    """
 
-# import csv
-#
-# path = '../../parsed/single_293.csv'
-#
-# with open(path, 'r', encoding='utf-8', errors='ignore') as infile, open(path + 'final.csv', 'w') as outfile:
-#
-#     inputs = csv.reader(infile)
-#     output = csv.writer(outfile)
-#
-#     for index, row in enumerate(inputs):
-#         output.writerow(row)
+    path = input_path
+
+    with open(path, 'r', encoding='utf-8', errors='ignore') as infile, open(path + 'final.csv', 'w') as outfile:
+
+        inputs = csv.reader(infile)
+        output = csv.writer(outfile)
+
+        for index, row in enumerate(inputs):
+            output.writerow(row)
 
 
