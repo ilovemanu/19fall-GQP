@@ -9,3 +9,11 @@ Parse
 - 1_dataprocess_elements.ipynb
 - file_parser.py
 - parser_alex.py
+
+
+Clean
+- deep_clean.py
+
+
+Elasticsearch
+- es_search
