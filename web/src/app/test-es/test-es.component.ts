@@ -5,7 +5,7 @@ import { FormsModule } from '@angular/forms';
 @Component({
   selector: 'app-test-es',
   templateUrl: './test-es.component.html',
-  styleUrls: ['./test-es.component.css']
+  styleUrls: ['./test-es.component.scss']
 })
 
 export class TestEsComponent implements OnInit {
@@ -34,7 +34,7 @@ export class TestEsComponent implements OnInit {
 
   }
 
-  onSubmit() {
+  exactMatch() {
 
     // TODO convert promise to Observable
     this.es.fullTextSearch(this.userInput).then(
@@ -46,7 +46,9 @@ export class TestEsComponent implements OnInit {
       }).then(() => {
       console.log('Search Completed!');
     });
+  }
 
+  simSearch() {
     this.es.simSearch(this.userInput).then(
       response => {
         this.response = response.hits.hits;

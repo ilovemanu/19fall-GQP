@@ -1,24 +1,28 @@
-<h3 class="col-md-12 text-center">Elasticsearch server status: {{status}}</h3>
-
 <div class="container">
-  <form (ngSubmit)="onSubmit()">
-    <div class="form-group">
-      <label for="user-input">Search</label>
-      <input type="text" [(ngModel)]="userInput" class="input" id="user-input" required name="user-input">
-    </div>
+  <h3 class="col-md-12 text-center">Elasticsearch server status: {{status}}</h3>
 
-    <button type="submit" class="btn btn-success" id="match">Exact Match</button>
-    <button type="submit" class="btn btn-success" id="similarity">Similarity Search</button>
-
-  </form>
-</div>
-
-<!--{{ response[0]._source.filename }}-->
-
-<div *ngFor="let doc of response">
   <div>
-    <p>{{ doc._source.filename }}</p>
-    <p>{{ doc._source.citations }}</p>
+    <!--  <form (ngSubmit)="onSubmit()">-->
+    <form>
+      <div class="form-group">
+        <label for="user-input">Search</label>
+        <input type="text" [(ngModel)]="userInput" class="input" id="user-input" required name="user-input">
+      </div>
+
+      <button class="btn btn-success" id="match" (click)="exactMatch()">Exact Match</button>
+      <button class="btn btn-success" id="similarity" (click)="simSearch()">Similarity Search</button>
+
+    </form>
+  </div>
+
+  <!--{{ response[0]._source.filename }}-->
+
+  <div *ngFor="let doc of response">
+    <div class="response-container">
+      <p>{{ doc._source.filename }}</p>
+      <p>{{ doc._source.citations }}</p>
+      <p>{{ doc._source.clean }}</p>
+    </div>
   </div>
 </div>
 
