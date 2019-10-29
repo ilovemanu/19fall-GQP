@@ -31,34 +31,36 @@ export class ElasticsearchService {
 
   fullTextSearch(_queryText) {
     return this.client.search({
-      index: 'test',
+      index: 'non',
       body: {
         'query': {
           'match': {
-            'clean': {
+            'circumstance': {
               'query': _queryText,
               'operator': 'and'
             }
           }
         }
       },
-      '_source': ['filename', 'citations', 'clean']
+      '_source': ['filename', 'citations', 'circumstance']
     });
 
   }
 
   simSearch(_queryText) {
     return this.client.search({
-      index: 'test',
+      index: 'non',
       body: {
         'query': {
           'more_like_this' : {
-            'fields' : ['clean'],
-            'like' : _queryText
+            'fields' : ['circumstance'],
+            'like' : _queryText,
+            "min_term_freq" : 1,
+            "max_query_terms" : 50
           }
         }
       },
-      '_source': ['filename', 'citations', 'clean']
+      '_source': ['filename', 'citations', 'circumstance']
     });
   }
 }

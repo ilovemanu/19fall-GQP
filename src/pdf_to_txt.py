@@ -50,7 +50,7 @@ def pdf_to_txt(pdf_file, output_folder):
     for i in range(1, filelimit+1):
         filename = 'page_'+str(i)+'.jpg'
         
-        text = str(((pytesseract.image_to_string(Image.open(filename))))) 
+        text = str((pytesseract.image_to_string(Image.open(filename))))
         text = text.replace('-\n', '')     
         f.write(text)
         

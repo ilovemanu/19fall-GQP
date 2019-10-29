@@ -1,9 +1,34 @@
 .container {
-  //text-align: center;
+
+  .app-title {
+    color: #009688;
+    font-weight: bold;
+  }
+  .input {
+    font-size: 14px;
+    height: 100px;
+    width: 600px;
+  }
+
+  .btn {
+    background-color: #009688;
+    color: white;
+    padding: 15px 32px;
+    text-align: center;
+    font-size: 16px;
+    font-weight: bold;
+  }
 
   .response-container {
-    //width: 600px;
-    //text-align: center;
+    width: 600px;
+    margin-left: auto;
+    margin-right: auto;
+    text-align: left;
+  }
+
+  #filename {
+    color: #009688;
+    font-weight: bold;
   }
 
 }

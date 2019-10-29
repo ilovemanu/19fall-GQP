@@ -5,6 +5,30 @@ import re
 import nltk
 from nltk.corpus import stopwords
 import csv
+import os
+
+
+def combine_all(input_folder_path):
+
+    dfs = []
+    # col_names = ['filename', 'citations', 'circumstance']
+    _, _, filenames = next(os.walk(input_folder_path))
+    for c in filenames:
+        if c.endswith('csv'):
+            df = pd.read_csv(os.path.join(input_folder_path, c))
+            print(c)
+            print(df.shape)
+            print(df.head(2))
+            dfs.append(df)
+    pd_combine = pd.concat(dfs)
+    print(pd_combine.shape)
+    pd_combine.to_csv(os.path.join(input_folder_path, 'NONs.csv'), index=False)
+
+
+# if __name__ == '__main__':
+#     input_folder_path = '../../all_csv'
+#     combine_all(input_folder_path)
+    # print(pd.read_csv('../../all_csv/henry_clean.csv').head(2))
 
 
 def clean_text(input_file_path, output_file_path):
@@ -15,14 +39,12 @@ def clean_text(input_file_path, output_file_path):
     :return: the output csv contains filename, citations, cleaned description.
     """
 
+    col_names = ['filename', 'citations', 'circumstance']
     raw = pd.read_csv(input_file_path, encoding='utf-8')
-
-    # drop duplicates with filename variations
-    # need to confirm that multiple variations do exist before dropping
-    # raw = raw.drop(index=raw[raw.filename.str.endswith('N')].index.tolist())
-    # print(wo_dup[wo_dup.duplicated(subset=['paragraph'])])
+    # raw.dropna(axis=0, inplace=True)
 
     des = raw.paragraph.to_list()
+    print(len(des))
 
     clean_list = []
     for idx, p in enumerate(des):
@@ -30,16 +52,17 @@ def clean_text(input_file_path, output_file_path):
         # clean line breaks
         temp = re.sub(r'\n', ' ', p.strip().lower())
         # clean special characters
-        temp = re.sub(r'[^.,a-z0-9 ]', '', temp)
+        temp = re.sub(r'[^.,a-z0-9() ]', '', temp)
         # clean title
+        # temp = re.sub(r'description(s)? of act(ivity)? or omission constituting noncomplian( )?ce', '', temp)
         temp = re.sub(r'description(s)? of non(compliance)?', '', temp)
         # clean footer/header
         temp = re.sub(r'r\wn(s)? \d{8}', '', temp)
         temp = re.sub(r'enf(\w+)?(.)? doc(\w+)?(.)? no. \d{8}', '', temp)
-        temp = re.sub(r'page \d', '', temp)
+        # temp = re.sub(r'page \d', '', temp)
         temp = re.sub(r'notice of noncompliance( summary)?', '', temp)
         # remove numbers and punctuations?
-        temp = re.sub(r'[^a-z ]', '', temp)
+        # temp = re.sub(r'[^a-z ]', '', temp)
         # remove multiple spaces
         temp = re.sub(r'\s+', ' ', temp)
         temp = temp.strip()
@@ -49,15 +72,15 @@ def clean_text(input_file_path, output_file_path):
         print(temp)
         clean_list.append(temp)
 
-    raw['clean'] = clean_list
-    raw[['filename', 'citations', 'clean']].to_csv(output_file_path, index=False)
+    raw['circumstance'] = clean_list
+    raw[['filename', 'citations', 'circumstance']].to_csv(output_file_path, index=False)
     print('Done!')
 
 
-# input_file_path = '../../parsed/single_293.csv'
-# output_file_path = 'test.csv'
-# clean_text(input_file_path, output_file_path)
-# print(pd.read_csv('test.csv'))
+# if __name__ == '__main__':
+#     input_file_path = '../../all_csv/single_293.csv'
+#     output_file_path = '../../all_csv/single_293_clean.csv'
+#     clean_text(input_file_path, output_file_path)
 
 # input_file_path = '../../parsed/duo_105.csv'
 # output_file_path = '../../parsed/duo_105_clean.csv'
@@ -114,3 +137,14 @@ def utf_8_encoding(input_path):
             output.writerow(row)
 
 
+raw = pd.read_csv('../../all_csv/NONs.csv')
+print('')
+print(raw.loc[0]['circumstance'])
+#
+# # temp = [['40,0420'], ['40.1074'], ['40.1003'], ['40.0006'], ['40.0926'], ['40.1074'], ['40.0031'], ['40.1074'],
+# #         ['40.1074'], ['40.0034'], ['40.0031'], ['40.0425'], ['40.0835'], ['40.0560'], ['40.0191']]
+# idx = raw[raw.citations == "['10.1070']"].index.tolist()
+# print(idx)
+# raw['citations'].loc[idx] = "['40.1070']"
+# raw.to_csv('../../all_csv/NONs.csv', index=False)
+# # print(raw[raw.citations == "[]"])

@@ -20,9 +20,9 @@ def batch_pdf_to_txt(input_folder, output_folder):
     
     
     for dirpath, dirnames, filenames in os.walk(input_folder):
-#        print(dirpath)
-#        print(dirnames)
-#        print(filenames)
+        print(dirpath)
+        print(dirnames)
+        print(filenames)
         
         for f in filenames:
             # error control -> macos folders have .DS_Store file.
@@ -35,4 +35,5 @@ def batch_pdf_to_txt(input_folder, output_folder):
             
      
 # batch convert
-#batch_pdf_to_txt('NONs', 'NONs_txt')
+# batch_pdf_to_txt('../../UAOs', '../../UAOs_txt')
+

@@ -6,7 +6,7 @@ import { Component } from '@angular/core';
   styleUrls: ['./app.component.scss']
 })
 export class AppComponent {
-  title = 'MassDEP Search';
+  // title = 'MassDEP Document Search';
 }
 
 

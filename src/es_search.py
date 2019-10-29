@@ -17,8 +17,9 @@ mapping = {
             "citations": {
                 "type": "text"
             },
-            "clean": {
+            "circumstance": {
                 "type": "text",
+                "analyzer": "english",  # will deal with stopwords
                 "term_vector": "yes",
                 "similarity": "BM25"
             }
@@ -27,25 +28,28 @@ mapping = {
 }
 
 
-def csv_reader(file_name):
+def csv_reader(file_name, index_name):
     """
     Bulk load a csv file into Elasticsearch.
     :param file_name: input file path
     :return:
     """
     # delete index if exists
-    es.indices.delete(index='test', ignore=[400, 404])
+    es.indices.delete(index=index_name, ignore=[400, 404])
     # create index, set mapping
-    es.indices.create(index='test', body=mapping)
+    es.indices.create(index=index_name, body=mapping)
 
     with open(file_name, 'r') as outfile:
         reader = csv.DictReader(outfile)
-        helpers.bulk(es, reader, index="test")
+        helpers.bulk(es, reader, index=index_name)
 
     print("Done!")
 
 
-# csv_reader('test.csv')
+if __name__ == '__main__':
+    input_folder_path = '../../all_csv'
+    csv_reader('../../all_csv/NONs.csv', 'non')
+
 
 
 # test

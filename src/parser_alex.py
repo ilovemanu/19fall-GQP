@@ -295,3 +295,140 @@ def others_parser(csv_path):
 
 
 # others_parser('../../others_4 copy.csv')
+
+
+def acop_parser(input_path, csv_path):
+
+    q1 = r'STATEMENT OF( ALLEGED)? FACTS AND LAW'
+    q2 = r'DISPOSITION AND ORDER'
+    q3 = r'Consented To:'
+    q4 = r'SUPPLEMENTAL ENVIRONMENTAL PROJECT SUMMARY'
+
+    counter = 0  # track file num
+
+    _, _, filenames = next(os.walk(input_path))
+
+    for file in filenames:
+        if file.endswith('.txt'):
+            input_f = os.path.join(input_path, file)
+
+            with open(input_f, 'r', encoding='utf-8', errors='ignore') as f:
+                counter += 1
+                data = f.readlines()
+
+                for line_num, line in enumerate(data):
+
+                    if re.search(q1, line):
+                        n1 = line_num
+                    elif re.search(q2, line):
+                        n2 = line_num
+                    elif re.search(q3, line):
+                        n3 = line_num
+                        # counter_3 += 1
+                    elif re.search(q4, line):
+                        n4 = line_num
+                        # counter_4 += 1
+
+                facts_and_law = ''.join(data[n1+1:n2])
+                if n3:
+                    disposition_and_order = ''.join(data[n2+1:n3])
+                elif n4:
+                    disposition_and_order = ''.join(data[n2+1:n4])
+                else:
+                    disposition_and_order = ''.join(data[n2+1:])
+
+                print(file)
+                # print('')
+                # print(facts_and_law)
+                # print('')
+                # print(disposition_and_order)
+                # print('')
+                # break
+
+                # write out data for each file
+                header = ['filename', 'facts_and_law', 'disposition_and_order']
+                write_csv(csv_path, header, (file.split('.')[0], facts_and_law, disposition_and_order))
+    print('Done!')
+    return counter
+
+
+def uao_parser(input_path, csv_path):
+
+    q1 = r'STATEMENT OF FACTS AND LAW'
+    q2 = r'DISPOSITION( AND ORDER)?'
+    q3 = r'ADJUDICATORY HEARING'
+    q4 = r'APPEALS'
+    q5 = r'No Further Text Appears On This Page'
+
+    counter = 0  # track file num
+
+    _, _, filenames = next(os.walk(input_path))
+
+    for file in filenames:
+        if file.endswith('.txt'):
+            input_f = os.path.join(input_path, file)
+
+            with open(input_f, 'r', encoding='utf-8', errors='ignore') as f:
+                counter += 1
+                data = f.readlines()
+                counter_1 = 0
+                counter_2 = 0
+                counter_3 = 0
+                counter_4 = 0
+                counter_5 = 0
+
+                for line_num, line in enumerate(data):
+
+                    if re.search(q1, line):
+                        n1 = line_num
+                        counter_1 += 1
+                    elif re.search(q2, line):
+                        n2 = line_num
+                        counter_2 += 1
+                    elif re.search(q3, line):
+                        n3 = line_num
+                        counter_3 += 1
+                    elif re.search(q4, line):
+                        n4 = line_num
+                        counter_4 += 1
+                    elif re.search(q5, line, re.IGNORECASE):
+                        n5 = line_num
+                        counter_5 += 1
+
+                facts_and_law = ''.join(data[n1+1:n2])
+                if n3:
+                    disposition_and_order = ''.join(data[n2+1:n3])
+                elif n4:
+                    disposition_and_order = ''.join(data[n2+1:n4])
+                elif n5:
+                    disposition_and_order = ''.join(data[n2+1:n5])
+                else:
+                    disposition_and_order = ''.join(data[n2+1:])
+
+                # write out data for each file
+                header = ['filename', 'facts_and_law', 'disposition_and_order']
+                write_csv(csv_path, header, (file.split('.')[0], facts_and_law, disposition_and_order))
+    print('Done!')
+    return counter
+
+
+def achu_part(input_path1, input_path2):
+
+    raw2 = pd.read_csv(input_path2)
+    raw2 = raw2[raw2.filename.notnull()]
+    raw1 = pd.read_csv(input_path1)
+    raw1 = raw1[raw1.filename.notnull()]
+
+    combine = pd.concat([raw1, raw2])
+    combine.to_csv('../../achu_combine.csv', index=False)
+
+    print(combine[combine.citations == '[]']['filename'])
+
+
+# if __name__ == '__main__':
+#     input_path1 = '../../output2.csv'
+#     input_path2 = '../../output1.csv'
+#     achu_part(input_path1, input_path2)
+
+
+print(pd.read_csv('../../data_combined_v1.csv').head(2))
