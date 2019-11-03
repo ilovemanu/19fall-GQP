@@ -13,6 +13,7 @@ export class TestEsComponent implements OnInit {
   status: string;
 
   userInput: string;
+  userYearFilter: string;
   response: any;
 
 
@@ -35,9 +36,10 @@ export class TestEsComponent implements OnInit {
   }
 
   exactMatch() {
-
     // TODO convert promise to Observable
-    this.es.fullTextSearch(this.userInput).then(
+    console.log(this.userInput;
+    console.log(this.userYearFilter);
+    this.es.fullTextSearch(this.userInput, this.userYearFilter).then(
       response => {
         this.response = response.hits.hits;
         console.log(this.response);
@@ -49,7 +51,7 @@ export class TestEsComponent implements OnInit {
   }
 
   simSearch() {
-    this.es.simSearch(this.userInput).then(
+    this.es.simSearch(this.userInput, this.userYearFilter).then(
       response => {
         this.response = response.hits.hits;
         console.log(this.response);

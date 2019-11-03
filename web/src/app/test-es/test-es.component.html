@@ -14,6 +14,13 @@
       <button class="btn btn-success" id="match" (click)="exactMatch()">Full-text Search</button>
       <button class="btn btn-success" id="similarity" (click)="simSearch()">Similarity Search</button>
 
+      <select name="userYearFilter" [(ngModel)]="userYearFilter">
+        <option value="allTime" [ngValue]="allTime">All Time</option>
+        <option value="lastTenYears" [ngValue]="lastTenYears">Last 10 Years</option>
+        <option value="lastFiveYears" [ngValue]="lastFiveYears">Last 5 Years</option>
+        <option value="lastYear" [ngValue]="lastYear">Last Year</option>
+      </select>
+
     </form>
   </div>
 
@@ -23,6 +30,7 @@
     <div class="response-container">
 
       <p id="filename">{{ doc._source.filename }}</p>
+      <p id="year">{{ doc._source.year }}</p>
       <p id="citations">{{ doc._source.citations }}</p>
       <p id="circumstance">{{ doc._source.circumstance }}</p>
 

@@ -22,6 +22,9 @@ mapping = {
                 "analyzer": "english",  # will deal with stopwords
                 "term_vector": "yes",
                 "similarity": "BM25"
+            },
+            "year": {
+                "type": "integer"
             }
         }
     }
