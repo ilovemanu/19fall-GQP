@@ -29,9 +29,82 @@ export class ElasticsearchService {
     });
   }
 
-  fullTextSearch(_queryText) {
-    return this.client.search({
-      index: "_all",
+  fullTextSearch(_queryText, _userYearFilter) {
+    if(_userYearFilter === "lastYear"){
+      return this.client.search({
+       body: {
+        "query": {
+          "bool": {
+            "must": {
+              "match": {
+                'circumstance': {
+                  'query': _queryText,
+                  'operator': 'and'
+                }
+              }
+            },
+            "filter": {
+              "range": {
+                "year": { "gte" : (new Date()).getFullYear()-1, "lte" : (new Date()).getFullYear()}
+              }
+          }
+         }
+        }
+       },
+    '_source': ['filename', 'citations', 'circumstance', 'year']
+  });
+    }
+    if(_userYearFilter === "lastFiveYears"){
+      return this.client.search({
+       body: {
+        "query": {
+          "bool": {
+            "must": {
+              "match": {
+                'circumstance': {
+                  'query': _queryText,
+                  'operator': 'and'
+                }
+              }
+            },
+            "filter": {
+              "range": {
+                "year": { "gte" : (new Date()).getFullYear()-5, "lte" : (new Date()).getFullYear()}
+              }
+          }
+         }
+        }
+       },
+    '_source': ['filename', 'citations', 'circumstance', 'year', 'link']
+  });
+    }
+    if(_userYearFilter === "lastTenYears"){
+      return this.client.search({
+       body: {
+        "query": {
+          "bool": {
+            "must": {
+              "match": {
+                'circumstance': {
+                  'query': _queryText,
+                  'operator': 'and'
+                }
+              }
+            },
+            "filter": {
+              "range": {
+                "year": { "gte" : (new Date()).getFullYear()-10, "lte" : (new Date()).getFullYear()}
+              }
+            }
+         }
+        }
+       },
+    '_source': ['filename', 'citations', 'circumstance', 'year', 'link']
+  });
+    }
+    else{
+      return this.client.search({
+      index: '_all',
       body: {
         'query': {
           'match': {
@@ -42,25 +115,101 @@ export class ElasticsearchService {
           }
         }
       },
-      '_source': ['filename', 'citations', 'circumstance', 'link', 'year']
+      '_source': ['filename', 'citations', 'circumstance', 'year', 'link']
     });
-
+    }
   }
 
-  simSearch(_queryText) {
-    return this.client.search({
-      index: "_all",
+  simSearch(_queryText, _userTypeFilter, _userYearFilter) {
+  console.log(_userYearFilter);
+  console.log(_queryText);
+  if(_userYearFilter === "lastYear"){
+      return this.client.search({
+       body: {
+        "query": {
+          "bool": {
+            "must": {
+              "more_like_this": {
+                'fields' : ['circumstance'],
+                'like' : _queryText,
+                "min_term_freq" : 1,
+                "max_query_terms" : 50
+              }
+            },
+            "filter": {
+              "range": {
+                "year": { "gte" : (new Date()).getFullYear()-1, "lte" : (new Date()).getFullYear()}
+              }
+          }
+         }
+        }
+       },
+    '_source': ['filename', 'citations', 'circumstance', 'year']
+  });
+    }
+    if(_userYearFilter === "lastFiveYears"){
+      return this.client.search({
+       body: {
+        "query": {
+          "bool": {
+            "must": {
+              "more_like_this": {
+                'fields' : ['circumstance'],
+                'like' : _queryText,
+                "min_term_freq" : 1,
+                "max_query_terms" : 50
+              }
+            },
+            "filter": {
+              "range": {
+                "year": { "gte" : (new Date()).getFullYear()-5, "lte" : (new Date()).getFullYear()}
+              }
+          }
+         }
+        }
+       },
+    '_source': ['filename', 'citations', 'circumstance', 'year', 'link']
+  });
+    }
+    if(_userYearFilter === "lastTenYears"){
+      return this.client.search({
+       body: {
+        "query": {
+          "bool": {
+            "must": {
+              "more_like_this": {
+                'fields' : ['circumstance'],
+                'like' : _queryText,
+                "min_term_freq" : 1,
+                "max_query_terms" : 50
+              }
+            },
+            "filter": {
+              "range": {
+                "year": { "gte" : (new Date()).getFullYear()-10, "lte" : (new Date()).getFullYear()}
+              }
+          }
+         }
+        }
+       },
+    '_source': ['filename', 'citations', 'circumstance', 'year', 'link']
+  });
+    }
+    else{
+      return this.client.search({
+      index: 'non',
       body: {
         'query': {
           'more_like_this' : {
             'fields' : ['circumstance'],
             'like' : _queryText,
-            "min_term_freq" : 2,
+            "min_term_freq" : 1,
             "max_query_terms" : 50
           }
         }
       },
-      '_source': ['filename', 'citations', 'circumstance', 'link', 'year']
+      '_source': ['filename', 'citations', 'circumstance', 'year', 'link']
     });
+    }
   }
 }

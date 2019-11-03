@@ -14,23 +14,26 @@
       <button class="btn btn-success" id="match" (click)="exactMatch()">Full-text Search</button>
       <button class="btn btn-success" id="similarity" (click)="simSearch()">Similarity Search</button>
 
+      <select name="userYearFilter" [(ngModel)]="userYearFilter">
+        <option value="allTime" [ngValue]="allTime">All Time</option>
+        <option value="lastTenYears" [ngValue]="lastTenYears">Last 10 Years</option>
+        <option value="lastFiveYears" [ngValue]="lastFiveYears">Last 5 Years</option>
+        <option value="lastYear" [ngValue]="lastYear">Last Year</option>
+      </select>
+
+      <select name="userTypeFilter" [(ngModel)]="userTypeFilter">
+        <option value="allType" [ngValue]="allType">ALL</option>
+        <option value="typeNon" [ngValue]="typeNon">NON</option>
+        <option value="typeAcop" [ngValue]="typeAcop">ACOP</option>
+        <option value="typeUao" [ngValue]="typeUao">UAO</option>
+      </select>
+
     </form>
   </div>
 
-<!--  <div class="form-group">-->
-<!--    <label for="filter">Filter</label>-->
-<!--    <select-->
-<!--      name="filter"-->
-<!--      id="filter"-->
-<!--      class="form-control"-->
-<!--      [(ngModel)]="contact.contactMethod">-->
-<!--      <option *ngFor="let f of filters" [value]="method.id">{{ method.label }}</option>-->
-<!--    </select>-->
-<!--  </div>-->
+  <!--{{ response[0]._source.filename }}-->
 
-
-
-  <div *ngFor="let doc of response$ | async">
+  <div *ngFor="let doc of response">
     <div class="response-container">
 
       <p id="filename">{{ doc._source.filename }}</p>
