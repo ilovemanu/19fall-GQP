@@ -120,7 +120,7 @@ export class ElasticsearchService {
     }
   }
 
-  simSearch(_queryText, _userTypeFilter, _userYearFilter) {
+  simSearch(_queryText, _userYearFilter) {
   console.log(_userYearFilter);
   console.log(_queryText);
   if(_userYearFilter === "lastYear"){

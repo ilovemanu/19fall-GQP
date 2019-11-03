@@ -1,9 +1,6 @@
 import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { ElasticsearchService } from '../elasticsearch.service';
 import { FormsModule } from '@angular/forms';
-import {BehaviorSubject, Observable, of} from "rxjs";
-import {fromPromise} from "rxjs/internal-compatibility";
-import {catchError, tap} from "rxjs/operators";
 
 @Component({
   selector: 'app-test-es',
@@ -16,10 +13,8 @@ export class TestEsComponent implements OnInit {
   status: string;
 
   userInput: string;
+  userYearFilter: string;
   response: any;
-
-  // responseSubject: BehaviorSubject<any>;
-  // response$: Observable<any>;
 
 
   constructor(private es: ElasticsearchService, private cd: ChangeDetectorRef) {
@@ -41,19 +36,10 @@ export class TestEsComponent implements OnInit {
   }
 
   exactMatch() {
-    // this.response$ = fromPromise(this.es.fullTextSearch(this.userInput)).pipe(
-    //   // tap( r => console.log(r)),
-    //   catchError(error => of(`Bad Promise: ${error}`))
-    // );
-    //
-    // this.response$.subscribe(
-    //   r => console.log(r)
-    // );
-
-
-
     // TODO convert promise to Observable
-    this.es.fullTextSearch(this.userInput).then(
+    console.log(this.userInput);
+    console.log(this.userYearFilter);
+    this.es.fullTextSearch(this.userInput, this.userYearFilter).then(
       response => {
         this.response = response.hits.hits;
         console.log(this.response);
@@ -65,7 +51,7 @@ export class TestEsComponent implements OnInit {
   }
 
   simSearch() {
-    this.es.simSearch(this.userInput).then(
+    this.es.simSearch(this.userInput, this.userYearFilter).then(
       response => {
         this.response = response.hits.hits;
         console.log(this.response);
@@ -74,10 +60,6 @@ export class TestEsComponent implements OnInit {
       }).then(() => {
       console.log('Search Completed!');
     });
-  }
-
-  filter(filterType) {
-
   }
 
 }
