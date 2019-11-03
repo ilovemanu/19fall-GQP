@@ -303,6 +303,7 @@ def acop_parser(input_path, csv_path):
     q2 = r'DISPOSITION AND ORDER'
     q3 = r'Consented To:'
     q4 = r'SUPPLEMENTAL ENVIRONMENTAL PROJECT SUMMARY'
+    qc = r'40[.,]\d{4}'
 
     counter = 0  # track file num
 
@@ -317,48 +318,46 @@ def acop_parser(input_path, csv_path):
                 data = f.readlines()
 
                 for line_num, line in enumerate(data):
-
                     if re.search(q1, line):
                         n1 = line_num
                     elif re.search(q2, line):
                         n2 = line_num
                     elif re.search(q3, line):
                         n3 = line_num
-                        # counter_3 += 1
                     elif re.search(q4, line):
                         n4 = line_num
-                        # counter_4 += 1
+
+                if n1 > n2: print(file)
 
                 facts_and_law = ''.join(data[n1+1:n2])
-                if n3:
-                    disposition_and_order = ''.join(data[n2+1:n3])
-                elif n4:
-                    disposition_and_order = ''.join(data[n2+1:n4])
-                else:
-                    disposition_and_order = ''.join(data[n2+1:])
+                citations = re.findall(qc, facts_and_law)
+                for c in citations:
+                    if c[2] == ',': c.replace(',', '.')
+                    if ' ' in c: c.replace(' ', '')
+                    if c == '40.0000':
+                        citations.remove(c)
+                    if c[2] == ',': c.replace(',', '.')
 
-                print(file)
-                # print('')
-                # print(facts_and_law)
-                # print('')
-                # print(disposition_and_order)
-                # print('')
-                # break
+                if len(citations) == 0: print('missing citations: ', file)
 
                 # write out data for each file
-                header = ['filename', 'facts_and_law', 'disposition_and_order']
-                write_csv(csv_path, header, (file.split('.')[0], facts_and_law, disposition_and_order))
+                header = ['filename', 'citations', 'circumstance']
+                write_csv(csv_path, header, (file.split('.')[0], list(set(citations)), facts_and_law))
     print('Done!')
     return counter
+
+
+# if __name__ == '__main__':
+#     input_path = '../../ACOPs_txt'
+#     csv_path = '../../ACOPs.csv'
+#     acop_parser(input_path, csv_path)
 
 
 def uao_parser(input_path, csv_path):
 
     q1 = r'STATEMENT OF FACTS AND LAW'
     q2 = r'DISPOSITION( AND ORDER)?'
-    q3 = r'ADJUDICATORY HEARING'
-    q4 = r'APPEALS'
-    q5 = r'No Further Text Appears On This Page'
+    qc = r'40[.,]\d{4}'
 
     counter = 0  # track file num
 
@@ -373,9 +372,6 @@ def uao_parser(input_path, csv_path):
                 data = f.readlines()
                 counter_1 = 0
                 counter_2 = 0
-                counter_3 = 0
-                counter_4 = 0
-                counter_5 = 0
 
                 for line_num, line in enumerate(data):
 
@@ -385,31 +381,32 @@ def uao_parser(input_path, csv_path):
                     elif re.search(q2, line):
                         n2 = line_num
                         counter_2 += 1
-                    elif re.search(q3, line):
-                        n3 = line_num
-                        counter_3 += 1
-                    elif re.search(q4, line):
-                        n4 = line_num
-                        counter_4 += 1
-                    elif re.search(q5, line, re.IGNORECASE):
-                        n5 = line_num
-                        counter_5 += 1
+
+                if n1 > n2: print(file)
 
                 facts_and_law = ''.join(data[n1+1:n2])
-                if n3:
-                    disposition_and_order = ''.join(data[n2+1:n3])
-                elif n4:
-                    disposition_and_order = ''.join(data[n2+1:n4])
-                elif n5:
-                    disposition_and_order = ''.join(data[n2+1:n5])
-                else:
-                    disposition_and_order = ''.join(data[n2+1:])
+                citations = re.findall(qc, facts_and_law)
+                for c in citations:
+                    if c[2] == ',': c.replace(',', '.')
+                    if ' ' in c: c.replace(' ', '')
+                    if c == '40.0000':
+                        citations.remove(c)
+                    if c[2] == ',': c.replace(',', '.')
+
+                if len(citations) == 0: print('missing citations: ', file)
 
                 # write out data for each file
-                header = ['filename', 'facts_and_law', 'disposition_and_order']
-                write_csv(csv_path, header, (file.split('.')[0], facts_and_law, disposition_and_order))
+                header = ['filename', 'citations', 'circumstance']
+                write_csv(csv_path, header, (file.split('.')[0], list(set(citations)), facts_and_law))
     print('Done!')
     return counter
+
+
+# if __name__ == '__main__':
+#     input_path = '../../UAOs_txt'
+#     csv_path = '../../uao.csv'
+#     uao_parser(input_path, csv_path)
+
 
 
 def achu_part(input_path1, input_path2):
@@ -425,10 +422,6 @@ def achu_part(input_path1, input_path2):
     print(combine[combine.citations == '[]']['filename'])
 
 
-# if __name__ == '__main__':
-#     input_path1 = '../../output2.csv'
-#     input_path2 = '../../output1.csv'
-#     achu_part(input_path1, input_path2)
 
 
-print(pd.read_csv('../../data_combined_v1.csv').head(2))
+

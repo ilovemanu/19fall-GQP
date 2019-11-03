@@ -31,7 +31,7 @@ export class ElasticsearchService {
 
   fullTextSearch(_queryText) {
     return this.client.search({
-      index: 'non',
+      index: "_all",
       body: {
         'query': {
           'match': {
@@ -42,25 +42,25 @@ export class ElasticsearchService {
           }
         }
       },
-      '_source': ['filename', 'citations', 'circumstance']
+      '_source': ['filename', 'citations', 'circumstance', 'link', 'year']
     });
 
   }
 
   simSearch(_queryText) {
     return this.client.search({
-      index: 'non',
+      index: "_all",
       body: {
         'query': {
           'more_like_this' : {
             'fields' : ['circumstance'],
             'like' : _queryText,
-            "min_term_freq" : 1,
+            "min_term_freq" : 2,
             "max_query_terms" : 50
           }
         }
       },
-      '_source': ['filename', 'citations', 'circumstance']
+      '_source': ['filename', 'citations', 'circumstance', 'link', 'year']
     });
   }
 }

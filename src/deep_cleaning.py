@@ -43,7 +43,7 @@ def clean_text(input_file_path, output_file_path):
     raw = pd.read_csv(input_file_path, encoding='utf-8')
     # raw.dropna(axis=0, inplace=True)
 
-    des = raw.paragraph.to_list()
+    des = raw.circumstance.to_list()
     print(len(des))
 
     clean_list = []
@@ -78,8 +78,8 @@ def clean_text(input_file_path, output_file_path):
 
 
 # if __name__ == '__main__':
-#     input_file_path = '../../all_csv/single_293.csv'
-#     output_file_path = '../../all_csv/single_293_clean.csv'
+#     input_file_path = '../../uao.csv'
+#     output_file_path = '../../uao_clean.csv'
 #     clean_text(input_file_path, output_file_path)
 
 # input_file_path = '../../parsed/duo_105.csv'
@@ -137,14 +137,9 @@ def utf_8_encoding(input_path):
             output.writerow(row)
 
 
-raw = pd.read_csv('../../all_csv/NONs.csv')
-print('')
-print(raw.loc[0]['circumstance'])
-#
-# # temp = [['40,0420'], ['40.1074'], ['40.1003'], ['40.0006'], ['40.0926'], ['40.1074'], ['40.0031'], ['40.1074'],
-# #         ['40.1074'], ['40.0034'], ['40.0031'], ['40.0425'], ['40.0835'], ['40.0560'], ['40.0191']]
-# idx = raw[raw.citations == "['10.1070']"].index.tolist()
-# print(idx)
-# raw['citations'].loc[idx] = "['40.1070']"
-# raw.to_csv('../../all_csv/NONs.csv', index=False)
-# # print(raw[raw.citations == "[]"])
+# if __name__ == '__main__':
+#     input_path = '../../uao.csv'
+#     utf_8_encoding(input_path)
+
+
+print(pd.read_csv('../../acop_clean.csv').shape)

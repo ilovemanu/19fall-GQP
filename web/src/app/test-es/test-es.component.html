@@ -17,12 +17,24 @@
     </form>
   </div>
 
-  <!--{{ response[0]._source.filename }}-->
+<!--  <div class="form-group">-->
+<!--    <label for="filter">Filter</label>-->
+<!--    <select-->
+<!--      name="filter"-->
+<!--      id="filter"-->
+<!--      class="form-control"-->
+<!--      [(ngModel)]="contact.contactMethod">-->
+<!--      <option *ngFor="let f of filters" [value]="method.id">{{ method.label }}</option>-->
+<!--    </select>-->
+<!--  </div>-->
 
-  <div *ngFor="let doc of response">
+
+
+  <div *ngFor="let doc of response$ | async">
     <div class="response-container">
 
       <p id="filename">{{ doc._source.filename }}</p>
+      <a id="link" href="url">{{ doc._source.link }}</a>
       <p id="citations">{{ doc._source.citations }}</p>
       <p id="circumstance">{{ doc._source.circumstance }}</p>
 
