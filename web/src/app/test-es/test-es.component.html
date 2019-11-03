@@ -21,11 +21,11 @@
         <option value="lastYear" [ngValue]="lastYear">Last Year</option>
       </select>
 
-      <select name="userTypeFilter" [(ngModel)]="userTypeFilter">
-        <option value="allType" [ngValue]="allType">ALL</option>
-        <option value="typeNon" [ngValue]="typeNon">NON</option>
-        <option value="typeAcop" [ngValue]="typeAcop">ACOP</option>
-        <option value="typeUao" [ngValue]="typeUao">UAO</option>
+      <select name="userTypeFilter" [(ngModel)]="userTypeFilter" (change)="typeFilterChanged($event.target.value)">
+        <option value="_all" [ngValue]="_all">ALL</option>
+        <option value="non" [ngValue]="non">NON</option>
+        <option value="acop" [ngValue]="acop">ACOP</option>
+        <option value="uao" [ngValue]="uao">UAO</option>
       </select>
 
     </form>
@@ -33,7 +33,7 @@
 
   <!--{{ response[0]._source.filename }}-->
 
-  <div *ngFor="let doc of response">
+  <div *ngFor="let doc of filteredResponse">
     <div class="response-container">
 
       <p id="filename">{{ doc._source.filename }}</p>

@@ -1,6 +1,7 @@
 import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { ElasticsearchService } from '../elasticsearch.service';
 import { FormsModule } from '@angular/forms';
+import {Observable} from "rxjs";
 
 @Component({
   selector: 'app-test-es',
@@ -13,8 +14,10 @@ export class TestEsComponent implements OnInit {
   status: string;
 
   userInput: string;
-  userYearFilter: string;
-  response: any;
+  userYearFilter = 'allTime';
+  userTypeFilter = '_all';
+  response: any[];
+  filteredResponse: any[];
 
 
   constructor(private es: ElasticsearchService, private cd: ChangeDetectorRef) {
@@ -42,6 +45,7 @@ export class TestEsComponent implements OnInit {
     this.es.fullTextSearch(this.userInput, this.userYearFilter).then(
       response => {
         this.response = response.hits.hits;
+        this.filteredResponse = this.response;
         console.log(this.response);
       }, error => {
         console.error(error);
@@ -54,12 +58,23 @@ export class TestEsComponent implements OnInit {
     this.es.simSearch(this.userInput, this.userYearFilter).then(
       response => {
         this.response = response.hits.hits;
+        this.filteredResponse = this.response;
         console.log(this.response);
       }, error => {
         console.error(error);
       }).then(() => {
       console.log('Search Completed!');
     });
+  }
+
+  typeFilterChanged(type: string) {
+    console.log(type);
+
+    if ( type === '_all') {
+      this.filteredResponse = this.response;
+    } else {
+      this.filteredResponse = this.response.filter(doc => doc._index === type);
+    }
   }
 
 }

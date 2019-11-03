@@ -197,7 +197,7 @@ export class ElasticsearchService {
     }
     else{
       return this.client.search({
-      index: 'non',
+      index: '_all',
       body: {
         'query': {
           'more_like_this' : {
