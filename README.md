@@ -34,23 +34,26 @@ MacOS:
 We recomend install Elasticsearch with the Homebrew package manager.
 
 i) write 
-` brew install elastic/tap/elasticsearch-full ` 
+``` 
+brew install elastic/tap/elasticsearch-full
+
+```
 from the command line.
 ![1.png](pics/1.png)
 
 ii) run 
-    `cd /usr/local/etc/elasticsearch
+    ```cd /usr/local/etc/elasticsearch
        open elasticsearch.yml
-    ` 
+    ``` 
     in the command line
     ![2.png](pics/2.png)
     
 iii)paste
-    `http.cors.enabled : true
+    ```http.cors.enabled : true
        http.cors.allow-origin : "*"
        http.cors.allow-methods : OPTIONS, HEAD, GET, POST, PUT, DELETE
        http.cors.allow-headers : X-Requested-With, X-Auth-Token,Content-Type, Content-Length
-    `
+    ```
     at the end of the file
     ![3.png](pics/3.png)
     
@@ -90,8 +93,12 @@ It is very common to see some warn in the command line.
 ![10.png](pics/10.png)
 
 i)![5.png](pics/5.png)
-Fix: run `sudo npm install -g @angular/cli@latest` in the command line
-     then run `ng serve` in the command line
+Fix: run 
+```
+sudo npm install -g @angular/cli@latest
+``` 
+in the command line
+then run `ng serve` in the command line
 
 ii)![6.png](pics/6.png)
 Fix: open the "package.json" file
