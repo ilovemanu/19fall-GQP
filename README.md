@@ -41,15 +41,19 @@ brew install elastic/tap/elasticsearch-full
 from the command line.
 ![1.png](pics/1.png)
 
+
 ii) run 
-    ```cd /usr/local/etc/elasticsearch
-       open elasticsearch.yml
-    ``` 
+    ```
+    cd /usr/local/etc/elasticsearch
+       open elasticsearch.yml  
+    ```
     in the command line
     ![2.png](pics/2.png)
-    
+  
+  
 iii)paste
-    ```http.cors.enabled : true
+    ```
+       http.cors.enabled : true
        http.cors.allow-origin : "*"
        http.cors.allow-methods : OPTIONS, HEAD, GET, POST, PUT, DELETE
        http.cors.allow-headers : X-Requested-With, X-Auth-Token,Content-Type, Content-Length
@@ -62,7 +66,9 @@ iii)paste
 Elasticsearch-browser is needed for the front-end. MacOS:
 ```
 npm install elasticsearch-browser
+
 ```
+
 
 - Download the elasticsearch package for python.
 Run `pip install elasticsearch` from the command line.
@@ -82,6 +88,7 @@ Run `elasticsearch` from the command line.
 Once you run the code successful, you will see the pics below.
 ![4.png](pics/4.png)
 
+
 4. Install dependencies, go to `/web` and run
 ```
 npm install
@@ -92,7 +99,11 @@ It is very common to see some warn in the command line.
 5. To start the web app, under `/web` run `ng serve`.
 ![10.png](pics/10.png)
 
+
+
+
 i)![5.png](pics/5.png)
+
 Fix: run 
 ```
 sudo npm install -g @angular/cli@latest
@@ -101,16 +112,20 @@ in the command line
 then run `ng serve` in the command line
 
 ii)![6.png](pics/6.png)
+
 Fix: open the "package.json" file
      change "@angular/compiler-cli",like the below screenshot
      ![7.png](pics/7.png)
+     
      then run ` npm install` and `ng serve` in the command line
      
 
 iii)![8.png](pics/8.png)
+
 Fix: open the "package.json" file
      change "rxjs" and "TypeScript" verstion like below screenshot
      ![9.png](pics/9.png)
+     
      Next go to your project folder and delete "node_modules" folder.
      After delete, next run `npm install` in the command line
      Finally run `ng serve`
