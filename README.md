@@ -29,15 +29,37 @@ Exploratory Data Analysis
 
 - Elasticsearch installation.
 https://www.elastic.co/guide/en/elasticsearch/reference/current/install-elasticsearch.html
+MacOS:
+We recomend install Elasticsearch with the Homebrew package manager.
+i) write' brew install elastic/tap/elasticsearch-full ' from the command line.
+![1.png](pics/1.png)
 
-- Start Elasticsearch.
-Run `elasticsearch` from the command line.
-
+ii) run 
+    '''cd /usr/local/etc/elasticsearch
+       open elasticsearch.yml
+    ''' 
+    in the command line
+    ![2.png](pics/2.png)
+    
+iii)paste
+    '''http.cors.enabled : true
+       http.cors.allow-origin : "*"
+       http.cors.allow-methods : OPTIONS, HEAD, GET, POST, PUT, DELETE
+       http.cors.allow-headers : X-Requested-With, X-Auth-Token,Content-Type, Content-Length
+    '''
+    at the end of the file
+    ![3.png](pics/3.png)
+    
+    
 - Elasticsearch-browser installation.
 Elasticsearch-browser is needed for the front-end. MacOS:
 ```
 npm install elasticsearch-browser
 ```
+
+- Download the elasticsearch package for python.
+Run `pip install elasticsearch` from the command line.
+If you have more than one python version, make sure the package install in the version you used in Pycharm. 
 
 ### Installing
 
@@ -47,14 +69,44 @@ npm install elasticsearch-browser
 ```
 /src/es-load.py
 ```
+Once you run the code successful, you will see the pics below.
+![4.png](pics/4.png)
 
 3. Install dependencies, go to `/web` and run
 ```
 npm install
 ```
+It is very common to see some warn in the command line.
 
-4. To start the web app, under `/web` run `ng serve`. Navigate to `http://localhost:4200/`.
 
+4. To start the web app, under `/web` run `ng serve`.
+![10.png](pics/10.png)
+
+i)![5.png](pics/5.png)
+Fix: run 'sudo npm install -g @angular/cli@latest' in the command line
+     then run 'ng serve' in the command line
+
+ii)![6.png](pics/6.png)
+Fix: open the "package.json" file
+     change "@angular/compiler-cli",like the below screenshot
+     ![7.png](pics/7.png)
+     then run" npm install" "ng serve" in the command line
+     
+
+iii)![8.png](pics/8.png)
+Fix: open the "package.json" file
+     change "rxjs" and "TypeScript" verstion like below screenshot
+     ![9.png](pics/9.png)
+     Next go to your project folder and delete "node_modules" folder.
+     After delete, next run 'npm install' in the command line
+     Finally run 'ng serve'
+
+
+5. Start Elasticsearch.
+Run `elasticsearch` from the command line.
+
+6. Navigate to `http://localhost:4200/`.
+![11.png](pics/11.png)
 
 ## Built With
 This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 6.0.3.
