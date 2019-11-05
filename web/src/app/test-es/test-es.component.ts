@@ -2,6 +2,7 @@ import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { ElasticsearchService } from '../elasticsearch.service';
 import { FormsModule } from '@angular/forms';
 import {Observable} from "rxjs";
+import {and} from "@angular/router/src/utils/collection";
 
 @Component({
   selector: 'app-test-es',
@@ -42,7 +43,7 @@ export class TestEsComponent implements OnInit {
     // TODO convert promise to Observable
     console.log(this.userInput);
     console.log(this.userYearFilter);
-    this.es.fullTextSearch(this.userInput, this.userYearFilter).then(
+    this.es.fullTextSearch(this.userInput).then(
       response => {
         this.response = response.hits.hits;
         this.filteredResponse = this.response;
@@ -55,7 +56,7 @@ export class TestEsComponent implements OnInit {
   }
 
   simSearch() {
-    this.es.simSearch(this.userInput, this.userYearFilter).then(
+    this.es.simSearch(this.userInput).then(
       response => {
         this.response = response.hits.hits;
         this.filteredResponse = this.response;
@@ -67,6 +68,7 @@ export class TestEsComponent implements OnInit {
     });
   }
 
+  // TODO: chaining the two filters
   typeFilterChanged(type: string) {
     console.log(type);
 
@@ -77,4 +79,30 @@ export class TestEsComponent implements OnInit {
     }
   }
 
+  yearFilterChanged(year: string) {
+    console.log(year)
+
+
+    if ( year === 'allTime') {
+      this.filteredResponse = this.response;
+    }
+    else if ( year === 'lastYear') {
+      this.filteredResponse = this.response.filter(doc => {
+        console.log(`+doc._source.year: ${+doc._source.year}`);
+        console.log(`new Date().getFullYear() - 1: ${new Date().getFullYear() - 1}`);
+
+        return +doc._source.year > new Date().getFullYear() - 1
+      });
+    }
+    else if ( year === 'lastFiveYears') {
+      this.filteredResponse = this.response.filter(
+        doc => +doc._source.year > new Date().getFullYear() - 5
+      );
+    }
+    else if ( year === 'lastTenYears') {
+      this.filteredResponse = this.response.filter(
+        doc => +doc._source.year > new Date().getFullYear() - 10
+      );
+    }
+  }
 }

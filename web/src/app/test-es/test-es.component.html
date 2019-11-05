@@ -14,7 +14,7 @@
       <button class="btn btn-success" id="match" (click)="exactMatch()">Full-text Search</button>
       <button class="btn btn-success" id="similarity" (click)="simSearch()">Similarity Search</button>
 
-      <select name="userYearFilter" [(ngModel)]="userYearFilter">
+      <select name="userYearFilter" [(ngModel)]="userYearFilter" (change)="yearFilterChanged($event.target.value)">
         <option value="allTime" [ngValue]="allTime">All Time</option>
         <option value="lastTenYears" [ngValue]="lastTenYears">Last 10 Years</option>
         <option value="lastFiveYears" [ngValue]="lastFiveYears">Last 5 Years</option>
@@ -22,7 +22,7 @@
       </select>
 
       <select name="userTypeFilter" [(ngModel)]="userTypeFilter" (change)="typeFilterChanged($event.target.value)">
-        <option value="_all" [ngValue]="_all">ALL</option>
+        <option value="_all" [ngValue]="_all">All Doc Type</option>
         <option value="non" [ngValue]="non">NON</option>
         <option value="acop" [ngValue]="acop">ACOP</option>
         <option value="uao" [ngValue]="uao">UAO</option>
@@ -31,13 +31,12 @@
     </form>
   </div>
 
-  <!--{{ response[0]._source.filename }}-->
 
   <div *ngFor="let doc of filteredResponse">
     <div class="response-container">
 
       <p id="filename">{{ doc._source.filename }}</p>
-      <a id="link" href="url">{{ doc._source.link }}</a>
+      <a id="link" [href]="doc._source.link" target="_blank">{{ doc._source.link }}</a>
       <p id="citations">{{ doc._source.citations }}</p>
       <p id="circumstance">{{ doc._source.circumstance }}</p>
 
