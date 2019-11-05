@@ -65,21 +65,24 @@ If you have more than one python version, make sure the package install in the v
 
 1. Download the 19fall-GQP repository.
 
-2. CSV files are included in the `/data` folder. To import data into Elasticsearch, first make sure Elasticsearch is connected, then run 
+2. Start Elasticsearch.
+Run `elasticsearch` from the command line.
+
+3. CSV files are included in the `/data` folder. To import data into Elasticsearch, first make sure Elasticsearch is connected, then run 
 ```
 /src/es-load.py
 ```
 Once you run the code successful, you will see the pics below.
 ![4.png](pics/4.png)
 
-3. Install dependencies, go to `/web` and run
+4. Install dependencies, go to `/web` and run
 ```
 npm install
 ```
 It is very common to see some warn in the command line.
 
 
-4. To start the web app, under `/web` run `ng serve`.
+5. To start the web app, under `/web` run `ng serve`.
 ![10.png](pics/10.png)
 
 i)![5.png](pics/5.png)
@@ -100,10 +103,6 @@ Fix: open the "package.json" file
      Next go to your project folder and delete "node_modules" folder.
      After delete, next run 'npm install' in the command line
      Finally run 'ng serve'
-
-
-5. Start Elasticsearch.
-Run `elasticsearch` from the command line.
 
 6. Navigate to `http://localhost:4200/`.
 ![11.png](pics/11.png)
