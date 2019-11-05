@@ -29,9 +29,13 @@ Exploratory Data Analysis
 
 - Elasticsearch installation.
 https://www.elastic.co/guide/en/elasticsearch/reference/current/install-elasticsearch.html
+
 MacOS:
 We recomend install Elasticsearch with the Homebrew package manager.
-i) write ` brew install elastic/tap/elasticsearch-full ` from the command line.
+
+i) write 
+` brew install elastic/tap/elasticsearch-full ` 
+from the command line.
 ![1.png](pics/1.png)
 
 ii) run 
