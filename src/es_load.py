@@ -24,7 +24,7 @@ mapping = {
                 "similarity": "BM25"  # TF/IDF-based similarity
             },
             "year": {
-                "type": "integer"
+                "type": "text"
             },
             "link": {
                 "type": "text"

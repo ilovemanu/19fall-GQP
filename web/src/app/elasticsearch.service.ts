@@ -54,7 +54,7 @@ export class ElasticsearchService {
           'more_like_this' : {
             'fields' : ['circumstance'],
             'like' : _queryText,
-            "min_term_freq" : 1,
+            "min_term_freq" : 2,
             "max_query_terms" : 50
           }
         }
