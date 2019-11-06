@@ -103,17 +103,17 @@ To import data into Elasticsearch, first make sure Elasticsearch is connected, t
    The compilation may take a while, if it is successful, you will see:
    ![10.png](pics/10.png)
 
-   It is also very common to see warnings and errors during 5. We include some examples in the troubleshooting section.
+   It is also very common to see warnings and errors during step 5. We include some examples in the troubleshooting section.
 
-6. Navigate to `http://localhost:4200/`.
+6. Navigate to `http://localhost:4200/`. You will see
    ![11.png](pics/11.png)
 
-7. Stop Elasticsearch and the Web App. Press "Control" + "C" in both command line windows.
+7. Stop Elasticsearch and the Web App. Press `Control` + `C` in both command line windows.
 
 
 ### Troubleshooting
 
-Scenario 1
+- Scenario 1
 ![5.png](pics/5.png)
 
 Fix: Run the following code from the command line. 
@@ -122,7 +122,8 @@ sudo npm install -g @angular/cli@latest
 ``` 
 Then run `ng serve` in the command line.
 
-Scenario 2
+
+- Scenario 2
 ![6.png](pics/6.png)
 
 Fix: Open the `package.json` file under /web and 
@@ -131,15 +132,16 @@ Fix: Open the `package.json` file under /web and
 
 Then run ` npm install` and `ng serve` in the command line
 
-Scenario 3
+
+- Scenario 3
 ![8.png](pics/8.png)
 
 Fix: open the `package.json` file and
      change `rxjs` and `TypeScript` version like the below screenshot
      ![9.png](pics/9.png)
      
- Next, go to the project folder and delete the `node_modules` folder.
- After the deletion, run `npm install` and `ng serve` in the command line
+Next, go to the project folder and delete the `node_modules` folder.
+After the deletion, run `npm install` and `ng serve` in the command line
 
 ## Built With
 This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 6.0.3.
