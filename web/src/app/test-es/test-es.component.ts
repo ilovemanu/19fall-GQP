@@ -1,8 +1,6 @@
 import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { ElasticsearchService } from '../elasticsearch.service';
-import { FormsModule } from '@angular/forms';
-import {Observable} from "rxjs";
-import {and} from "@angular/router/src/utils/collection";
+
 
 @Component({
   selector: 'app-test-es',
