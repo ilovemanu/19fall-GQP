@@ -9,14 +9,19 @@ import { ElasticsearchService } from '../elasticsearch.service';
 })
 
 export class TestEsComponent implements OnInit {
+  readonly DEFAULT_YEAR_FILTER = 'allTime';
+  readonly DEFAULT_TYPE_FILTER = '_all';
+
   isConnected = false;
   status: string;
 
   userInput: string;
-  userYearFilter = 'allTime';
-  userTypeFilter = '_all';
+  userYearFilter = this.DEFAULT_YEAR_FILTER;
+  userTypeFilter = this.DEFAULT_TYPE_FILTER;
   response: any[];
   filteredResponse: any[];
+  filteredTypeResponse: any[];
+  filteredYearResponse: any[];
 
 
   constructor(private es: ElasticsearchService, private cd: ChangeDetectorRef) {
@@ -51,6 +56,9 @@ export class TestEsComponent implements OnInit {
       }).then(() => {
       console.log('Search Completed!');
     });
+
+    this.userYearFilter = this.DEFAULT_YEAR_FILTER;
+    this.userTypeFilter = this.DEFAULT_TYPE_FILTER;
   }
 
   simSearch() {
@@ -64,6 +72,9 @@ export class TestEsComponent implements OnInit {
       }).then(() => {
       console.log('Search Completed!');
     });
+
+    this.userYearFilter = this.DEFAULT_YEAR_FILTER;
+    this.userTypeFilter = this.DEFAULT_TYPE_FILTER;
   }
 
   // TODO: chaining the two filters
@@ -71,21 +82,21 @@ export class TestEsComponent implements OnInit {
     console.log(type);
 
     if ( type === '_all') {
-      this.filteredResponse = this.response;
+      this.filteredTypeResponse = this.response;
     } else {
-      this.filteredResponse = this.response.filter(doc => doc._index === type);
+      this.filteredTypeResponse = this.response.filter(doc => doc._index === type);
     }
+      this.filteredResponse = this.filteredYearResponse ? this.filteredTypeResponse.filter(type => this.filteredYearResponse.includes(type)) : this.filteredTypeResponse;
   }
 
   yearFilterChanged(year: string) {
     console.log(year)
 
-
     if ( year === 'allTime') {
-      this.filteredResponse = this.response;
+      this.filteredYearResponse = this.response;
     }
     else if ( year === 'lastYear') {
-      this.filteredResponse = this.response.filter(doc => {
+      this.filteredYearResponse = this.response.filter(doc => {
         console.log(`+doc._source.year: ${+doc._source.year}`);
         console.log(`new Date().getFullYear() - 1: ${new Date().getFullYear() - 1}`);
 
@@ -93,14 +104,17 @@ export class TestEsComponent implements OnInit {
       });
     }
     else if ( year === 'lastFiveYears') {
-      this.filteredResponse = this.response.filter(
+      this.filteredYearResponse = this.response.filter(
         doc => +doc._source.year > new Date().getFullYear() - 5
       );
     }
     else if ( year === 'lastTenYears') {
-      this.filteredResponse = this.response.filter(
+      this.filteredYearResponse = this.response.filter(
         doc => +doc._source.year > new Date().getFullYear() - 10
       );
     }
+
+    this.filteredResponse = this.filteredTypeResponse ? this.filteredYearResponse.filter(year => this.filteredTypeResponse.includes(year)) : this.filteredYearResponse;
+    console.log(this.filteredResponse);
   }
 }

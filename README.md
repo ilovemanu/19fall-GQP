@@ -1,6 +1,20 @@
 # 19fall_GQP_MassDEP
 
-TO-DO: Project description.
+## Project Description
+To facilitate the transition of useful information to a younger workforce, 
+MassDEP is looking for an innovative knowledge transfer mechanism that can 
+inform younger employees of the relevant citations 
+(an alphanumeric categorization MassDEP uses to identify a specific violation)
+when faced with a circumstance 
+(the situation which resulted in the code violation being identified) 
+by providing similar enforcement documents from the past. 
+
+This project includes the following goals:
+- Extract document elements: citations and circumstance.
+- Correlate citations to descriptions of violation circumstances.
+- Enable full-text search and similarity search, 
+given key word(s), phrases, and paragraphs describing a circumstance.
+- Build a user-friendly document search engine. 
 
 ## Data Processing and Exploration
 
@@ -15,13 +29,10 @@ Parsing
 
 Cleaning
 - deep_clean.py
-- ...
-
-Combining
-- ...
 
 Exploratory Data Analysis
-- ...
+- 1basic_statistics.ipynb
+- 2sentimental_analysis.ipynb
 
 ## Getting Started with the Web Application
 
@@ -150,7 +161,7 @@ This project was generated with [Angular CLI](https://github.com/angular/angular
 - Alex (ilovemanu)
 - Zenia (ZeniaHuang)
 - Achu (ekshej)
-- Henry
+- Henry (henryji96)
 
 ## License
 
