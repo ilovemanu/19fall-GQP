@@ -2,8 +2,6 @@
 
 import pandas as pd
 import re
-import nltk
-from nltk.corpus import stopwords
 import csv
 import os
 
@@ -93,32 +91,6 @@ def clean_text(input_file_path, output_file_path):
 # print(pd.read_csv('../../parsed/others_4_clean.csv').columns)
 
 
-def nlp(file_path):
-
-    raw = pd.read_csv(file_path, encoding='utf-8')
-    data = raw.clean.to_list()
-
-    for idx, p in enumerate(data):
-
-        # remove numbers and punctuations
-        temp = re.sub(r'[^a-z ]', '', p)
-        # remove multiple spaces
-        temp = temp.strip()
-        temp = re.sub(r'\s+', ' ', temp)
-
-        stop_words = stopwords.words('english')
-
-        word_tokens = nltk.word_tokenize(temp)
-        word_tokens = [word for word in word_tokens if word not in stop_words]
-
-        print(idx)
-        print(word_tokens)
-
-
-# input_file_path = 'test.csv'
-# nlp(input_file_path)
-
-
 def utf_8_encoding(input_path):
     """
     Rewrite a csv to have utf-8 encoding.
@@ -142,4 +114,22 @@ def utf_8_encoding(input_path):
 #     utf_8_encoding(input_path)
 
 
-print(pd.read_csv('../../acop_clean.csv').shape)
+def citation_del_dups(input_file_folder):
+    """
+    Delete citation duplicates.
+    :param input_file_folder: data folder
+    :return: updated csv files
+    """
+
+    _, _, filenames = next(os.walk(input_file_folder))
+    # print(filenames)
+    for c in filenames:
+        if c.endswith('csv'):
+            df = pd.read_csv(os.path.join(input_file_folder, c))
+            df['citations'] = df.citations.apply(lambda x: list(dict.fromkeys(x[1:-1].replace("'", "").split(', '))))
+            df.to_csv(os.path.join(input_file_folder, c), index=False)
+
+
+if __name__ == '__main__':
+    input_file_folder = '../data'
+    citation_del_dups(input_file_folder)
