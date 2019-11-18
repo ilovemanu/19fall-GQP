@@ -11,7 +11,6 @@ import { ElasticsearchService } from '../elasticsearch.service';
 export class TestEsComponent implements OnInit {
   readonly DEFAULT_YEAR_FILTER = 'allTime';
   readonly DEFAULT_TYPE_FILTER = '_all';
-
   isConnected = false;
   status: string;
 
@@ -77,7 +76,6 @@ export class TestEsComponent implements OnInit {
     this.userTypeFilter = this.DEFAULT_TYPE_FILTER;
   }
 
-  // TODO: chaining the two filters
   typeFilterChanged(type: string) {
     console.log(type);
 
