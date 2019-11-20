@@ -21,6 +21,7 @@ export class TestEsComponent implements OnInit {
   filteredResponse: any[];
   filteredTypeResponse: any[];
   filteredYearResponse: any[];
+  noSearchResult = false;
 
 
   constructor(private es: ElasticsearchService, private cd: ChangeDetectorRef) {
@@ -48,6 +49,8 @@ export class TestEsComponent implements OnInit {
     this.es.fullTextSearch(this.userInput).then(
       response => {
         this.response = response.hits.hits;
+        this.noSearchResult = this.response.length === 0;
+
         this.filteredResponse = this.response;
         console.log(this.response);
       }, error => {
@@ -64,6 +67,7 @@ export class TestEsComponent implements OnInit {
     this.es.simSearch(this.userInput).then(
       response => {
         this.response = response.hits.hits;
+        this.noSearchResult = this.response.length === 0;
         this.filteredResponse = this.response;
         console.log(this.response);
       }, error => {
@@ -88,7 +92,7 @@ export class TestEsComponent implements OnInit {
   }
 
   yearFilterChanged(year: string) {
-    console.log(year)
+    console.log(year);
 
     if ( year === 'allTime') {
       this.filteredYearResponse = this.response;

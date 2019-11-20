@@ -21,7 +21,7 @@ mapping = {
                 "type": "text",
                 "analyzer": "english",  # Deal with stopwords
                 "term_vector": "yes",  # Save term vectors at indexing
-                "similarity": "BM25"  # TF/IDF-based similarity
+                "similarity": "BM25"  # TF/IDF-based similarity with normalization
             },
             "year": {
                 "type": "text"
