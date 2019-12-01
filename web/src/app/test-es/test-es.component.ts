@@ -96,6 +96,7 @@ export class TestEsComponent implements OnInit {
 
     if ( year === 'allTime') {
       this.filteredYearResponse = this.response;
+      console.log(this.response);
     }
     else if ( year === 'lastYear') {
       this.filteredYearResponse = this.response.filter(doc => {
