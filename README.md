@@ -1,20 +1,20 @@
 # 19fall_GQP_MassDEP
 
 ## Project Description
-To facilitate the transition of useful information to a younger workforce, 
+To facilitate the transition of useful information to a newer workforce, 
 MassDEP is looking for an innovative knowledge transfer mechanism that can 
-inform younger employees of the relevant citations 
+inform newer employees of the relevant citations 
 (an alphanumeric categorization MassDEP uses to identify a specific violation)
 when faced with a circumstance 
 (the situation which resulted in the code violation being identified) 
 by providing similar enforcement documents from the past. 
 
-This project includes the following goals:
-- Extract document elements: citations and circumstance.
-- Correlate citations to descriptions of violation circumstances.
-- Enable full-text search and similarity search, 
-given key word(s), phrases, and paragraphs describing a circumstance.
-- Build a user-friendly document search engine. 
+The ultimate goal of this project is to develop a web application to automate the knowledge transfer. 
+Smaller objectives include:
+- Extracting circumstances and citations from unstructured documents.
+- Performing analysis on document polarity and subjectivity.
+- Enabling full-text search and similarity search on circumstances.
+- Building a user-friendly web application. 
 
 ## Data Processing and Exploration
 
@@ -162,8 +162,3 @@ This project was generated with [Angular CLI](https://github.com/angular/angular
 - Zenia (ZeniaHuang)
 - Achu (ekshej)
 - Henry (henryji96)
-
-## License
-
-## Acknowledgments
-
